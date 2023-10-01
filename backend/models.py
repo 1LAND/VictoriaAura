@@ -31,7 +31,7 @@ class ImgFiles(models.Model):
         verbose_name = 'Изображение'
         verbose_name_plural = 'Изображения'
 class Countries(models.Model):
-    ava = models.ForeignKey(ImgFiles,on_delete=models.CASCADE,null=True)
+    img = models.ForeignKey(ImgFiles,on_delete=models.CASCADE,null=True)
     name = models.CharField(max_length=100)
     def __str__(self) -> str:
         return f'c_{self.name}'
@@ -48,7 +48,7 @@ class GameDiscipline(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=100)
     short_name = models.CharField(max_length=5)
-    ava = models.ForeignKey(ImgFiles,on_delete=models.CASCADE,null=True)
+    img = models.ForeignKey(ImgFiles,on_delete=models.CASCADE,null=True)
     users = models.ManyToManyField('User',related_name='users',blank=True)
     tournaments = models.ManyToManyField('Tournament',blank=True)
     def __str__(self) -> str:
@@ -72,7 +72,7 @@ class User(AbstractUser):
     main_game = models.ForeignKey(GameDiscipline,on_delete=models.CASCADE,null=True)
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team,on_delete=models.CASCADE,related_name='team',null=True)
-    ava = models.ForeignKey(ImgFiles,on_delete=models.CASCADE,null=True)
+    img = models.ForeignKey(ImgFiles,on_delete=models.CASCADE,null=True)
     age = models.IntegerField(default=0)
     text_info = models.TextField(blank=True)
     type_user = models.CharField(
@@ -109,7 +109,7 @@ class Match(models.Model):
         return f'm_{self.name}'
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
-    ava = models.ForeignKey(ImgFiles,on_delete=models.CASCADE,null=True)
+    img = models.ForeignKey(ImgFiles,on_delete=models.CASCADE,null=True)
     teams = models.ManyToManyField(Team)
     data_start = models.DateField()
     data_end = models.DateField()

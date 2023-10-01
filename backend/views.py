@@ -1,22 +1,30 @@
 from rest_framework.response import Response
-from rest_framework.decorators import api_view,action
+from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
 
 
-from .serializers import NewsSerializers,ImgSerializer,GameDisciplineSerializer
-from .models import News,ImgFiles,GameDiscipline
+from .serializers import NewsSerializers,ImgSerializer,GameDisciplineSerializer,UserMinInfoSerializer,UserMaxInfoSerializer 
+from .models import News,ImgFiles,GameDiscipline,User
+from rest_framework.permissions import IsAdminUser
 
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserMinInfoSerializer
 
-@api_view(['GET'])
-def news_list(request):
-    if request.method == 'GET':
-        data = News.objects.only('id','short_text','slug','img').select_related('img').order_by('-date','-time').all()
-        serializer = NewsSerializers(data, context={'request': request}, many=True)
-        return Response(serializer.data) 
+    @action(methods=['get'],detail=True,permission_classes=[IsAdminUser])
+    def all(self,request,pk=None):
+        data = User.objects.filter(pk=pk)
+        serializer = UserMaxInfoSerializer(data, context={'request': request}, many=True)
+        return Response(serializer.data[0]) 
+
+class NewsViewSet(ModelViewSet):
+    queryset = News.objects.only('id','short_text','slug','img').select_related('img').order_by('-date','-time').all()
+    serializer_class = NewsSerializers
 
 class GameDisciplineViewSet(ModelViewSet):
     queryset = GameDiscipline.objects.all()
     serializer_class = GameDisciplineSerializer
+
 class ImgViewSet(ModelViewSet):
     queryset = ImgFiles.objects.only('file','name')
     serializer_class = ImgSerializer
