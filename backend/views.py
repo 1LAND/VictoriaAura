@@ -3,9 +3,14 @@ from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
 
 
-from .serializers import NewsSerializers,ImgSerializer,GameDisciplineSerializer,UserMinInfoSerializer,UserMaxInfoSerializer 
-from .models import News,ImgFiles,GameDiscipline,User
+from .serializers import NewsSerializers,ImgSerializer,GameDisciplineSerializer,UserMinInfoSerializer,UserMaxInfoSerializer,TeamSerializer
+from .models import News,ImgFiles,GameDiscipline,User,Team
 from rest_framework.permissions import IsAdminUser
+
+
+class TeamViewSet(ModelViewSet):
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
