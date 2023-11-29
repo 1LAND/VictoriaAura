@@ -29,6 +29,7 @@ def get_access_token(code):
             "redirect_uri":CDA['redirect_uri'],
             "code":code
         },
+        proxies={"http": "Http Proxy"},
         headers={"Content-Type": "application/x-www-form-urlencoded"}
         ).json()['access_token']
 
@@ -43,7 +44,7 @@ def donation_alerts_login(request):
 def donation_alerts(request):
     code = request.GET.get("code")
     access_token = get_access_token(code)
-    objs = requests.get(f"{DEFAULT_API_LINK}alerts/donations?page=1", headers={"Authorization": f"Bearer {access_token}"}).json()
+    objs = requests.get(f"{DEFAULT_API_LINK}alerts/donations?page=1",proxies={"http": "Http Proxy"}, headers={"Authorization": f"Bearer {access_token}"}).json()
     return Response([{"group":i['username'],"users":i['message'],"amount":i['amount'],"currency": i["currency"]} for i in objs['data']])
 
 
